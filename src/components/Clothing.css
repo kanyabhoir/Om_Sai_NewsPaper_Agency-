@@ -1,0 +1,78 @@
+.app {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .bill-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .bill-form label {
+    margin-bottom: 10px;
+  }
+  
+  .bill-form input,
+  .bill-form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .bill-form button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .bill-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  
+  .summary table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .summary table, .summary th, .summary td {
+    border: 1px solid #ccc;
+  }
+  
+  .summary th, .summary td {
+    padding: 15px;
+    text-align: left;
+    vertical-align: middle;
+  }
+  
+  .summary th {
+    background-color: #f0f0f0;
+  }
+  
+  .totals p {
+    margin: 5px 0;
+    font-size: 1.2em;
+  }
+  
