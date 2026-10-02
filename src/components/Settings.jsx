@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import CustomerManager from "./CustomerManager";
 import "./Settings.css";
 
 const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
@@ -8,6 +9,7 @@ const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
     notifications: true,
     language: "en",
   });
+  const [showCustomers, setShowCustomers] = useState(false);
 
   useEffect(() => {
     setSettings((prev) => ({ ...prev, darkMode: isDarkMode }));
@@ -31,14 +33,20 @@ const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
     }));
   };
 
+  const handleClose = () => {
+    setShowCustomers(false);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="settings-overlay" onClick={onClose}>
+    <>
+    <div className="settings-overlay" onClick={handleClose}>
       <div className="settings-modal" onClick={(e) => e.stopPropagation()}>
         <div className="settings-header">
           <h2>Settings</h2>
-          <button className="settings-close" onClick={onClose}>
+          <button className="settings-close" onClick={handleClose}>
             ×
           </button>
         </div>
@@ -115,6 +123,23 @@ const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
           </div>
 
           <div className="settings-section">
+            <h3>Customers</h3>
+            <div className="settings-item">
+              <div className="settings-item-info">
+                <label>Manage Customers</label>
+                <span>Add, edit, or remove customers</span>
+              </div>
+              <button
+                type="button"
+                className="settings-action-btn"
+                onClick={() => setShowCustomers(true)}
+              >
+                Add Customer
+              </button>
+            </div>
+          </div>
+
+          <div className="settings-section">
             <h3>About</h3>
             <div className="settings-about">
               <p>
@@ -132,12 +157,18 @@ const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
         </div>
 
         <div className="settings-footer">
-          <button className="settings-save-btn" onClick={onClose}>
+          <button className="settings-save-btn" onClick={handleClose}>
             Done
           </button>
         </div>
       </div>
     </div>
+
+    <CustomerManager
+      isOpen={showCustomers}
+      onClose={() => setShowCustomers(false)}
+    />
+    </>
   );
 };
 

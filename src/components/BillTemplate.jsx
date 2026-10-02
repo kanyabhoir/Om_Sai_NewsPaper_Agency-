@@ -1,12 +1,14 @@
 import "./BillTemplate.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WhatsappShareButton, WhatsappIcon } from "react-share";
 import GenerateImage from "./GenerateImage";
 import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import { format } from "date-fns";
 import ReloadButton from "./ReloadButton";
 import Toast from "./Toast";
 import DatePicker from "react-datepicker";
+import { getCustomers } from "../api/customers";
 
 // const newspaperOptions = [
 //   "नवभारत",
@@ -121,6 +123,80 @@ const BillTemplate = () => {
   const [newspaperList, setNewspaperList] = useState([]);
   const [amount, setAmount] = useState("");
   const [toast, setToast] = useState(null);
+  const [customerOptions, setCustomerOptions] = useState([]);
+  const [billData, setBillData] = useState({
+    name: "",
+    month: "",
+    date: "", // Store as yyyy-mm-dd string for HTML5 date input
+    googlePay: "7262889526",
+    phonePay: "",
+    balance: 0,
+  });
+
+  // Load saved customers for the Name dropdown (async/await)
+  useEffect(() => {
+    const loadCustomers = async () => {
+      try {
+        const customers = await getCustomers();
+        const options = customers.map((customer) => ({
+          label: customer.phone
+            ? `${customer.name} (${customer.phone})`
+            : customer.name,
+          value: customer.name,
+        }));
+        setCustomerOptions(options);
+      } catch (error) {
+        // Backend may be offline — typing a name still works
+        console.error("Failed to load customers:", error.message);
+        setCustomerOptions([]);
+      }
+    };
+
+    loadCustomers();
+  }, []);
+
+  const nameSelectStyles = {
+    control: (base) => ({
+      ...base,
+      backgroundColor: "white",
+      color: "black",
+      borderColor: "#999",
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused ? "#e6f0ff" : "white",
+      color: "black",
+    }),
+    menu: (base) => ({
+      ...base,
+      backgroundColor: "white",
+      zIndex: 5,
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: "#888",
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: "black",
+    }),
+  };
+
+  const handleNameSelect = (option) => {
+    setBillData((prev) => ({
+      ...prev,
+      name: option ? option.value : "",
+    }));
+  };
+
+  const handleCreateName = (inputValue) => {
+    const name = inputValue.trim();
+    if (!name) return;
+    setBillData((prev) => ({
+      ...prev,
+      name,
+    }));
+  };
 
   const handleNewspaperChange = (selectedOptions) => {
     setSelectedNewspapers(selectedOptions || []);
@@ -139,14 +215,6 @@ const BillTemplate = () => {
       type: "success",
     });
   };
-  const [billData, setBillData] = useState({
-    name: "",
-    month: "",
-    date: "", // Store as yyyy-mm-dd string for HTML5 date input
-    googlePay: "7262889526",
-    phonePay: "",
-    balance: 0,
-  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -224,11 +292,28 @@ const BillTemplate = () => {
             <div className="row">
               <div className="column">
                 <label>Name: </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={billData.name}
-                  onChange={handleInputChange}
+                <CreatableSelect
+                  options={customerOptions}
+                  value={
+                    billData.name
+                      ? {
+                          label: billData.name,
+                          value: billData.name,
+                        }
+                      : null
+                  }
+                  onChange={handleNameSelect}
+                  onCreateOption={handleCreateName}
+                  placeholder="Type name or select customer"
+                  isClearable
+                  isSearchable
+                  formatCreateLabel={(inputValue) =>
+                    `Use typed name: "${inputValue}"`
+                  }
+                  noOptionsMessage={() =>
+                    "No saved customers — type a name and press Enter"
+                  }
+                  styles={nameSelectStyles}
                 />
               </div>
 
