@@ -33,9 +33,23 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // --------------------------------------------
 // 3) MIDDLEWARE
 // --------------------------------------------
+// Allow local React app + live GitHub Pages site
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://kanyabhoir.github.io",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      // Allow tools like Postman (no origin) and our websites
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS: " + origin));
+      }
+    },
   })
 );
 app.use(express.json());
