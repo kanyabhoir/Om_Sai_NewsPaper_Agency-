@@ -20,8 +20,62 @@ require("dotenv").config({
   path: path.join(__dirname, "..", ".env"),
 });
 
-// Our Customer model (blueprint)
+// Our models (blueprints)
 const Customer = require("./models/Customer");
+const Newspaper = require("./models/Newspaper");
+
+// Default newspaper names (seeded once if DB is empty)
+const DEFAULT_NEWSPAPERS = [
+  "नवभारत",
+  "संध्यानंद",
+  "पुण्यनगरी",
+  "दिवाळी",
+  "सामना",
+  "आ.आनंद",
+  "पुढारी",
+  "साप्ताहिक",
+  "The Hindu",
+  "साक्षी",
+  "नवाकाळ",
+  "Mirror",
+  "A.B.P.",
+  "दिव्य भास्कर",
+  "मु. समाचार",
+  "तरुण भारत",
+  "दैनिक भास्कर",
+  "लोकमत",
+  "H.T.",
+  "सकाळ",
+  "delivery bill",
+  "F. Press",
+  "Eco",
+  "Magazine",
+  "Patrika",
+  "जन्मभूमी",
+  "महाराष्ट्र टाइम्स",
+  "लोकसत्ता",
+  "नवभारत टाइम्स",
+  "प्रत:काळ",
+  "Mint",
+  "finance",
+  "Indian Express",
+  "Wealth",
+  "मुंबई चौफेर",
+  "ठाणे वैभव",
+  "दिनकरनं",
+  "प्रत्यक्ष",
+  "गुजरात समाचार",
+  "Thanthi",
+  "Manorama",
+  "Mathrubhumi",
+  "Uday Vani",
+  "K. Mala",
+  "G. Mid day",
+  "E. Mid day",
+  "B. Standard",
+  "B. Line",
+  "Times",
+];
 
 // --------------------------------------------
 // 2) CREATE the app
@@ -66,6 +120,15 @@ async function connectDB() {
 
     await mongoose.connect(MONGODB_URI);
     console.log("MongoDB connected successfully!");
+
+    // Seed default newspapers once (only if collection is empty)
+    const newspaperCount = await Newspaper.countDocuments();
+    if (newspaperCount === 0) {
+      await Newspaper.insertMany(
+        DEFAULT_NEWSPAPERS.map((name) => ({ name }))
+      );
+      console.log("Default newspapers seeded!");
+    }
   } catch (error) {
     console.error("MongoDB connection failed!");
     console.error(error.message);
@@ -196,6 +259,101 @@ app.delete("/api/customers/:id", async function (req, res) {
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: "Failed to delete customer" });
+  }
+});
+
+// GET all newspapers
+app.get("/api/newspapers", async function (req, res) {
+  try {
+    const newspapers = await Newspaper.find().sort({ name: 1 });
+    res.json(newspapers);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch newspapers" });
+  }
+});
+
+// GET one newspaper by id
+app.get("/api/newspapers/:id", async function (req, res) {
+  try {
+    const newspaper = await Newspaper.findById(req.params.id);
+
+    if (!newspaper) {
+      return res.status(404).json({ error: "Newspaper not found" });
+    }
+
+    res.json(newspaper);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch newspaper" });
+  }
+});
+
+// ADD a new newspaper
+app.post("/api/newspapers", async function (req, res) {
+  try {
+    const name = req.body.name;
+
+    if (!name || name.trim() === "") {
+      return res.status(400).json({ error: "Name is required" });
+    }
+
+    const existing = await Newspaper.findOne({ name: name.trim() });
+    if (existing) {
+      return res.status(400).json({ error: "Newspaper already exists" });
+    }
+
+    const newNewspaper = await Newspaper.create({
+      name: name.trim(),
+    });
+
+    res.status(201).json(newNewspaper);
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ error: "Newspaper already exists" });
+    }
+    res.status(500).json({ error: "Failed to create newspaper" });
+  }
+});
+
+// UPDATE a newspaper
+app.put("/api/newspapers/:id", async function (req, res) {
+  try {
+    const name = req.body.name;
+
+    if (!name || name.trim() === "") {
+      return res.status(400).json({ error: "Name is required" });
+    }
+
+    const updatedNewspaper = await Newspaper.findByIdAndUpdate(
+      req.params.id,
+      { name: name.trim() },
+      { new: true }
+    );
+
+    if (!updatedNewspaper) {
+      return res.status(404).json({ error: "Newspaper not found" });
+    }
+
+    res.json(updatedNewspaper);
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ error: "Newspaper already exists" });
+    }
+    res.status(500).json({ error: "Failed to update newspaper" });
+  }
+});
+
+// DELETE a newspaper
+app.delete("/api/newspapers/:id", async function (req, res) {
+  try {
+    const deletedNewspaper = await Newspaper.findByIdAndDelete(req.params.id);
+
+    if (!deletedNewspaper) {
+      return res.status(404).json({ error: "Newspaper not found" });
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete newspaper" });
   }
 });
 

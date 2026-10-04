@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import CustomerManager from "./CustomerManager";
+import NewspaperManager from "./NewspaperManager";
 import "./Settings.css";
 
 const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
@@ -10,6 +11,7 @@ const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
     language: "en",
   });
   const [showCustomers, setShowCustomers] = useState(false);
+  const [showNewspapers, setShowNewspapers] = useState(false);
 
   useEffect(() => {
     setSettings((prev) => ({ ...prev, darkMode: isDarkMode }));
@@ -35,6 +37,7 @@ const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
 
   const handleClose = () => {
     setShowCustomers(false);
+    setShowNewspapers(false);
     onClose();
   };
 
@@ -140,6 +143,23 @@ const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
           </div>
 
           <div className="settings-section">
+            <h3>Newspapers</h3>
+            <div className="settings-item">
+              <div className="settings-item-info">
+                <label>Manage Newspapers</label>
+                <span>Add, edit, or remove newspaper names</span>
+              </div>
+              <button
+                type="button"
+                className="settings-action-btn"
+                onClick={() => setShowNewspapers(true)}
+              >
+                Add Newspaper
+              </button>
+            </div>
+          </div>
+
+          <div className="settings-section">
             <h3>About</h3>
             <div className="settings-about">
               <p>
@@ -167,6 +187,10 @@ const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
     <CustomerManager
       isOpen={showCustomers}
       onClose={() => setShowCustomers(false)}
+    />
+    <NewspaperManager
+      isOpen={showNewspapers}
+      onClose={() => setShowNewspapers(false)}
     />
     </>
   );
