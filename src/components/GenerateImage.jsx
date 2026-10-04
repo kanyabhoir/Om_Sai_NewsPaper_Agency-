@@ -120,7 +120,7 @@ const GenerateImage = ({
                     textTransform: "uppercase",
                   }}
                 >
-                  Om News Paper Agency
+                  Om Sai News Paper Agency
                 </span>
                 {/* <span
                   style={{
