@@ -207,14 +207,20 @@
 
 .customer-list-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
   padding: 14px 16px;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   background: #fafafa;
   transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.customer-list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
 .customer-list-item.is-editing {
@@ -251,6 +257,7 @@
   flex-shrink: 0;
 }
 
+.customer-btn-pay,
 .customer-btn-edit,
 .customer-btn-delete {
   padding: 8px 12px;
@@ -260,6 +267,245 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.customer-btn-pay {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.customer-btn-pay:hover {
+  background: #bbf7d0;
+}
+
+.customer-month-paid,
+.customer-month-due {
+  font-size: 12px !important;
+  font-weight: 700;
+}
+
+.customer-month-paid {
+  color: #166534 !important;
+}
+
+.customer-month-due {
+  color: #b45309 !important;
+}
+
+.customer-payment {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.customer-payment-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+}
+
+.customer-payment-form .customer-field {
+  margin-bottom: 0;
+}
+
+.customer-payment-form .customer-field:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+.customer-payment-form .customer-btn-primary {
+  grid-column: 1 / -1;
+}
+
+.customer-mode-label {
+  display: block;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.customer-mode-options {
+  display: flex;
+  gap: 8px;
+}
+
+.customer-mode-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.customer-mode-btn.is-active {
+  border-color: #6c63ff;
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.customer-history-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.customer-history h4 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.customer-btn-share {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.customer-btn-share:hover {
+  background: #bfdbfe;
+}
+
+.customer-proof-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.customer-proof-dialog {
+  width: min(440px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.customer-proof-sheet {
+  background: #ffffff;
+  color: #1f2937;
+  border-radius: 12px;
+  padding: 22px 20px 16px;
+  font-family: Arial, sans-serif;
+}
+
+.customer-proof-sheet p,
+.customer-proof-sheet h3,
+.customer-proof-sheet th,
+.customer-proof-sheet td {
+  color: #1f2937;
+}
+
+.customer-proof-brand {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #4338ca !important;
+}
+
+.customer-proof-sheet h3 {
+  margin: 4px 0 12px;
+  font-size: 22px;
+}
+
+.customer-proof-name {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.customer-proof-sheet p {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.customer-proof-sheet table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.customer-proof-sheet th,
+.customer-proof-sheet td {
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.customer-proof-sheet th {
+  font-size: 12px;
+  color: #6b7280 !important;
+}
+
+.customer-proof-note {
+  margin: 14px 0 0 !important;
+  font-size: 12px !important;
+  color: #6b7280 !important;
+}
+
+.customer-proof-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.customer-proof-actions .customer-btn-primary,
+.customer-proof-actions .customer-btn-secondary {
+  flex: 1;
+}
+
+.customer-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.customer-history-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.customer-history-list li div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.customer-history-list strong {
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.customer-history-list span {
+  color: #6b7280;
+  font-size: 12px;
 }
 
 .customer-btn-edit {
@@ -353,6 +599,51 @@
   color: #9ca3af;
 }
 
+.dark .customer-btn-pay {
+  background: #14532d;
+  color: #bbf7d0;
+}
+
+.dark .customer-month-paid {
+  color: #86efac !important;
+}
+
+.dark .customer-month-due {
+  color: #fdba74 !important;
+}
+
+.dark .customer-payment {
+  border-top-color: #4b5563;
+}
+
+.dark .customer-mode-label,
+.dark .customer-history h4,
+.dark .customer-history-list strong {
+  color: #f9fafb;
+}
+
+.dark .customer-mode-btn {
+  background: #1f2937;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark .customer-mode-btn.is-active {
+  background: #312e81;
+  border-color: #6c63ff;
+  color: #e0e7ff;
+}
+
+.dark .customer-history-list li {
+  background: #1f2937;
+  border-color: #4b5563;
+}
+
+.dark .customer-btn-share {
+  background: #1e3a8a;
+  color: #dbeafe;
+}
+
 .dark .customer-btn-edit {
   background: #4338ca;
   color: #e0e7ff;
@@ -385,13 +676,22 @@
     padding: 20px;
   }
 
-  .customer-list-item {
+  .customer-list-row {
     flex-direction: column;
     align-items: stretch;
   }
 
   .customer-list-actions {
     justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .customer-payment-form {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-proof-actions {
+    flex-direction: column;
   }
 
   .customer-form-actions {

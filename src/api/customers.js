@@ -59,3 +59,19 @@ export async function updateCustomer(id, data) {
 export async function deleteCustomer(id) {
   await withRetry(() => API.delete(`/customers/${id}`));
 }
+
+// ADD a payment: { amount, mode: "cash" | "online", month: "2026-10" }
+export async function addCustomerPayment(id, data) {
+  const response = await withRetry(() =>
+    API.post(`/customers/${id}/payments`, data)
+  );
+  return response.data;
+}
+
+// REMOVE one payment from a customer's history
+export async function deleteCustomerPayment(id, paymentId) {
+  const response = await withRetry(() =>
+    API.delete(`/customers/${id}/payments/${paymentId}`)
+  );
+  return response.data;
+}

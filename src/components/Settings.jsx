@@ -130,7 +130,7 @@ const Settings = ({ isOpen, onClose, onDarkModeToggle, isDarkMode }) => {
             <div className="settings-item">
               <div className="settings-item-info">
                 <label>Manage Customers</label>
-                <span>Add, edit, or remove customers</span>
+                <span>Add customers and record cash or online payments</span>
               </div>
               <button
                 type="button"

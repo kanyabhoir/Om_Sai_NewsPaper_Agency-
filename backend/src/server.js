@@ -246,6 +246,73 @@ app.put("/api/customers/:id", async function (req, res) {
   }
 });
 
+// ADD a payment on a customer
+// POST http://localhost:5000/api/customers/ID_HERE/payments
+// Body: { "amount": 250, "mode": "cash", "month": "2026-10" }
+app.post("/api/customers/:id/payments", async function (req, res) {
+  try {
+    const amount = Number(req.body.amount);
+    const mode = (req.body.mode || "").trim().toLowerCase();
+    const month = (req.body.month || "").trim();
+
+    if (!amount || amount <= 0 || Number.isNaN(amount)) {
+      return res.status(400).json({ error: "Enter a valid amount" });
+    }
+
+    if (mode !== "cash" && mode !== "online") {
+      return res.status(400).json({ error: "Payment mode must be cash or online" });
+    }
+
+    if (!/^\d{4}-\d{2}$/.test(month)) {
+      return res.status(400).json({ error: "Month must be like 2026-10" });
+    }
+
+    const customer = await Customer.findById(req.params.id);
+
+    if (!customer) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
+    customer.payments.push({
+      amount,
+      mode,
+      month,
+      paidAt: new Date(),
+    });
+
+    await customer.save();
+    res.status(201).json(customer);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to save payment" });
+  }
+});
+
+// REMOVE one payment (if entered by mistake)
+// DELETE http://localhost:5000/api/customers/ID_HERE/payments/PAYMENT_ID
+app.delete("/api/customers/:id/payments/:paymentId", async function (req, res) {
+  try {
+    const customer = await Customer.findById(req.params.id);
+
+    if (!customer) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
+    const hadPayment = customer.payments.some(function (payment) {
+      return String(payment._id) === req.params.paymentId;
+    });
+
+    if (!hadPayment) {
+      return res.status(404).json({ error: "Payment not found" });
+    }
+
+    customer.payments.pull(req.params.paymentId);
+    await customer.save();
+    res.json(customer);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to remove payment" });
+  }
+});
+
 // DELETE a customer
 // DELETE http://localhost:5000/api/customers/ID_HERE
 app.delete("/api/customers/:id", async function (req, res) {

@@ -25,6 +25,34 @@ const customerSchema = new mongoose.Schema(
       default: "",
       trim: true,
     },
+    // Each visit: how much they paid, cash or online, and which month
+    payments: {
+      type: [
+        {
+          amount: {
+            type: Number,
+            required: true,
+            min: 0,
+          },
+          mode: {
+            type: String,
+            required: true,
+            enum: ["cash", "online"],
+          },
+          // "2026-10" so each month can be tracked separately
+          month: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+          paidAt: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
+      default: [],
+    },
   },
   {
     // Automatically add createdAt and updatedAt
